@@ -1,8 +1,25 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { createStackNavigator } from 'react-navigation';
+import { View, Platform } from 'react-native';
 import { DISHES } from '../shared/dishes';
 import Menu from './MenuComponent';
 import Dishdetail from './DishdetailComponent';
+
+const MenuNavigator = createStackNavigator({
+    Menu: { screen: Menu },
+    Dishdetail: { screen: Dishdetail }
+}, {
+    initialRouteName: 'Menu',
+    navigationOptions: {
+        headerStyle: {
+            backgroundColor: '#512DA8'
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            color: '#fff'
+        }
+    }
+});
 
 class Main extends Component {
     constructor(props) {
@@ -20,15 +37,11 @@ class Main extends Component {
     }
 
     render() {
+        const paddingTop = Platform.OS === 'ios' || Platform.OS === 'web' ? 0 : Expo.Constants.statusBarHeight
+
         return (
-            <View>
-                <Menu
-                    dishes={this.state.dishes}
-                    onPress={(dishId) => this.inDishSelect(dishId)}
-                />
-                <Dishdetail
-                    dish={this.state.dishes.find((dish) => dish.id === this.state.selectedDish)}
-                />
+            <View style={{ flex: 1, paddingTop: paddingTop }}>
+                <MenuNavigator />
             </View>
         );
     }
