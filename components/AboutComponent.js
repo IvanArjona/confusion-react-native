@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, ScrollView, FlatList } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { Card } from 'react-native-elements';
+import * as Animatable from 'react-native-animatable';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { Loading } from './LoadingComponent';
@@ -21,7 +22,7 @@ function History(props) {
     );
 }
 
-function Leaders({ leaders, isLoading }) {
+function Leaders({ leaders, isLoading, errMess }) {
     const renderLeader = ({ item }) => {
         return (
             <ListItem
@@ -35,9 +36,9 @@ function Leaders({ leaders, isLoading }) {
     };
 
     if (isLoading) {
-        return (
-            <Loading />
-        );
+        return <Loading />;
+    } else if (errMess) {
+        return <Text>{errMess}</Text>;
     }
 
     return (
@@ -60,11 +61,14 @@ class About extends Component {
     render() {
         return (
             <ScrollView>
-                <History />
-                <Leaders
-                    leaders={this.props.leaders.leaders}
-                    isLoading={this.props.leaders.isLoading}
-                />
+                <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
+                    <History />
+                    <Leaders
+                        leaders={this.props.leaders.leaders}
+                        isLoading={this.props.leaders.isLoading}
+                        errMess={this.props.leaders.errMess}
+                    />
+                </Animatable.View>
             </ScrollView>
         );
     }

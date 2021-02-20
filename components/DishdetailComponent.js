@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, ScrollView, FlatList, Modal, StyleSheet, Button } from 'react-native';
 import { Card, Icon, Input, AirbnbRating } from 'react-native-elements';
 import { connect } from 'react-redux';
+import * as Animatable from 'react-native-animatable';
 import { postFavorite, postComment } from '../redux/ActionCreators';
 import { baseUrl } from '../shared/baseUrl';
 
@@ -130,13 +131,15 @@ class Dishdetail extends Component {
 
         return (
             <ScrollView>
-                <RenderDish
-                    dish={dish}
-                    favorite={isFavorite}
-                    onPressFavorite={() => this.markFavorite(dishId)}
-                    onPressEdit={() => this.toggleCommentModal()}
-                />
-                <RenderComments comments={comments}/>
+                <Animatable.View animation="fadeInUp" duration={2000} delay={1000}>
+                    <RenderDish
+                        dish={dish}
+                        favorite={isFavorite}
+                        onPressFavorite={() => this.markFavorite(dishId)}
+                        onPressEdit={() => this.toggleCommentModal()}
+                    />
+                    <RenderComments comments={comments}/>
+                </Animatable.View>
                 <Modal
                     animationType='slide'
                     transparent={false}
