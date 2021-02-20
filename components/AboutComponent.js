@@ -4,6 +4,7 @@ import { ListItem } from 'react-native-elements';
 import { Card } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
+import { Loading } from './LoadingComponent';
 
 const mapStateToProps = (state) => {
     return {
@@ -20,7 +21,7 @@ function History(props) {
     );
 }
 
-function Leaders({ leaders }) {
+function Leaders({ leaders, isLoading }) {
     const renderLeader = ({ item }) => {
         return (
             <ListItem
@@ -32,6 +33,12 @@ function Leaders({ leaders }) {
             />
         );
     };
+
+    if (isLoading) {
+        return (
+            <Loading />
+        );
+    }
 
     return (
         <Card title="Corporate Leadersip">
@@ -54,7 +61,10 @@ class About extends Component {
         return (
             <ScrollView>
                 <History />
-                <Leaders leaders={this.props.leaders.leaders} />
+                <Leaders
+                    leaders={this.props.leaders.leaders}
+                    isLoading={this.props.leaders.isLoading}
+                />
             </ScrollView>
         );
     }
