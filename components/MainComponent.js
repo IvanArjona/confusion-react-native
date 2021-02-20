@@ -10,6 +10,7 @@ import Menu from './MenuComponent';
 import Dishdetail from './DishdetailComponent';
 import Contact from './ContactComponent';
 import Reservation from './ReservationComponent';
+import Favorites from './FavoriteComponent';
 
 const mapStateToProps = (state) => {
     return {
@@ -81,6 +82,13 @@ const ReservationNavigator = createStackNavigator({
     navigationOptions
 });
 
+const FavoritesNavigator = createStackNavigator({
+    Favorites: { screen: Favorites }
+}, {
+    initialRouteName: 'Favorites',
+    navigationOptions
+});
+
 const CustomDrawerContentComponent = (props) => (
     <ScrollView>
         <SafeAreaView
@@ -141,6 +149,16 @@ const MainNavigator = createDrawerNavigator({
             )
         }
     },
+    Favorites: {
+        screen: FavoritesNavigator,
+        navigationOptions: {
+            title: 'My Favorites',
+            drawerLabel: 'My Favorites',
+            drawerIcon: ({ tintColor }) => (
+                <Icon name="heart" type="font-awesome" size={24} color={tintColor} />
+            )
+        }
+    },
     Reservation: {
         screen: ReservationNavigator,
         navigationOptions: {
@@ -151,7 +169,6 @@ const MainNavigator = createDrawerNavigator({
             )
         }
     }
-
 }, {
     drawerBackgroundColor: '#D1C4E9',
     contentComponent: CustomDrawerContentComponent

@@ -10,6 +10,7 @@ const mapStateToProps = (state) => {
         dishes: state.dishes
     };
 };
+
 class Menu extends Component {
 
     static navigationOptions = {
