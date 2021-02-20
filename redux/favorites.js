@@ -10,9 +10,6 @@ export const favorites = (state = [], action) => {
             }
 
         case ActionTypes.DELETE_FAVORITE:
-            console.error(action.payload)
-            console.log('##########')
-            console.error(state)
             return state.filter((favorite) => favorite !== action.payload);
 
         default:
