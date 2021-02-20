@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, FlatList } from 'react-native';
+import { Text, ScrollView, FlatList } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { Card } from 'react-native-elements';
 import { LEADERS } from '../shared/leaders';
@@ -52,10 +52,10 @@ class About extends Component {
 
     render() {
         return (
-            <View>
+            <ScrollView>
                 <History />
                 <Leaders leaders={this.state.leaders} />
-            </View>
+            </ScrollView>
         );
     }
 }
