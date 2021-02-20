@@ -2,11 +2,25 @@ import React, { Component } from 'react';
 import { createDrawerNavigator, createStackNavigator, DrawerItems, SafeAreaView, SafeAreView } from 'react-navigation';
 import { View, Text, Platform, Image, StyleSheet, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { connect } from 'react-redux';
+import { fetchDishes, fetchComments, fetchPromos, fetchLeaders } from '../redux/ActionCreators';
 import Home from './HomeComponent';
 import About from './AboutComponent';
 import Menu from './MenuComponent';
 import Dishdetail from './DishdetailComponent';
 import Contact from './ContactComponent';
+
+const mapStateToProps = (state) => {
+    return {
+    };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    fetchDishes: () => dispatch(fetchDishes()),
+    fetchComments: () => dispatch(fetchComments()),
+    fetchPromos: () => dispatch(fetchPromos()),
+    fetchLeaders: () => dispatch(fetchLeaders()),
+});
 
 const navigationOptions = ({ navigation }) => ({
     headerStyle: {
@@ -125,17 +139,12 @@ const MainNavigator = createDrawerNavigator({
 });
 
 class Main extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            selectedDish: null
-        };
-    }
 
-    inDishSelect(dishId) {
-        this.setState({
-            selectedDish: dishId
-        });
+    componentDidMount() {
+        this.props.fetchDishes();
+        this.props.fetchComments();
+        this.props.fetchPromos();
+        this.props.fetchLeaders();
     }
 
     render() {
@@ -173,4 +182,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Main;
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

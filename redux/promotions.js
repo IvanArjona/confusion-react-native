@@ -1,12 +1,10 @@
 import * as ActionTypes from './ActionTypes';
 
-const state = {
+export const promotions = (state = {
     isLoading: true,
     errMess: null,
     promotions: []
-};
-
-export const promotions = (state = state, action) => {
+}, action) => {
     switch (action.type) {
         case ActionTypes.ADD_PROMOS:
             return {

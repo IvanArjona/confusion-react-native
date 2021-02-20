@@ -1,12 +1,10 @@
 import * as ActionTypes from './ActionTypes';
 
-const state = {
+export const leaders = (state = {
     isLoading: true,
     errMess: null,
     leaders: []
-};
-
-export const leaders = (state = state, action) => {
+}, action) => {
     switch (action.type) {
         case ActionTypes.ADD_LEADERS:
             return {

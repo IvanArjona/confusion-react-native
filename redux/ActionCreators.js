@@ -104,7 +104,7 @@ export const promosFailed = (errmess) => ({
     payload: errmess
 });
 
-export const addDishes = (promos) => ({
+export const addPromos = (promos) => ({
     type: ActionTypes.ADD_PROMOS,
     payload: promos
 });
