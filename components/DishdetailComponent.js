@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, FlatList, Modal, StyleSheet, Button } from 'react-native';
+import { View, Text, ScrollView, FlatList, Modal, StyleSheet, Button, Alert, PanResponder } from 'react-native';
 import { Card, Icon, Input, AirbnbRating } from 'react-native-elements';
 import { connect } from 'react-redux';
 import * as Animatable from 'react-native-animatable';
@@ -20,34 +20,69 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 function RenderDish({ dish, favorite, onPressFavorite, onPressEdit }) {
+    const recognizeDrag = ({ moveX, moveY, dx, dy }) => {
+        return dx < -200;
+    };
+
+    const panResponder = PanResponder.create({
+        onStartShouldSetPanResponder: (e, gestureState) => {
+            return true;
+        },
+        onPanResponderEnd: (e, gestureState) => {
+            if (recognizeDrag(gestureState)) {
+                Alert.alert(
+                    'Add to favorites?',
+                    `Are you sure you wish to add ${dish.name} to your favorites?`,
+                    [
+                        {
+                            text: 'Cancel',
+                            style: 'cancel',
+                            onPress: () => console.log('Cancel pressed')
+                        },
+                        {
+                            text: 'OK',
+                            onPress: () => favorite ? console.log('Already favorite') : onPressFavorite()
+                        }
+                    ],
+                    { cancelable: false }
+                );
+            }
+            return true;
+        }
+    });
+
     if (dish) {
         return (
-            <Card
-                featuredTitle={dish.name}
-                image={{ uri: baseUrl + dish.image }}
+            <Animatable.View animation="fadeInUp" duration={2000} delay={1000}
+                {...panResponder.panHandlers}
             >
-                <Text style={{ margin: 10 }}>
-                    {dish.description}
-                </Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                    <Icon
-                        raised
-                        reverse
-                        name={favorite ? 'heart' : 'heart-o'}
-                        type='font-awesome'
-                        color='#f50'
-                        onPress={() => favorite ? console.log('Already favorite') : onPressFavorite()}
-                    />
-                    <Icon
-                        raised
-                        reverse
-                        name='pencil'
-                        type='font-awesome'
-                        color='#512DA8'
-                        onPress={() => onPressEdit()}
-                    />
-                </View>
-            </Card>
+                <Card
+                    featuredTitle={dish.name}
+                    image={{ uri: baseUrl + dish.image }}
+                >
+                    <Text style={{ margin: 10 }}>
+                        {dish.description}
+                    </Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                        <Icon
+                            raised
+                            reverse
+                            name={favorite ? 'heart' : 'heart-o'}
+                            type='font-awesome'
+                            color='#f50'
+                            onPress={() => favorite ? console.log('Already favorite') : onPressFavorite()}
+                        />
+                        <Icon
+                            raised
+                            reverse
+                            name='pencil'
+                            type='font-awesome'
+                            color='#512DA8'
+                            onPress={() => onPressEdit()}
+                        />
+                    </View>
+                </Card>
+            </Animatable.View>
         );
     } else {
         return (
@@ -68,13 +103,15 @@ function RenderComments({ comments }) {
     }
 
     return (
-        <Card title="Comments">
-            <FlatList
-                data={comments}
-                renderItem={renderCommentItem}
-                keyExtractor={(item) => item.id.toString()}
-            />
-        </Card>
+        <Animatable.View animation="fadeInUp" duration={2000} delay={1000}>
+            <Card title="Comments">
+                <FlatList
+                    data={comments}
+                    renderItem={renderCommentItem}
+                    keyExtractor={(item) => item.id.toString()}
+                />
+            </Card>
+        </Animatable.View>
     );
 }
 
@@ -131,15 +168,13 @@ class Dishdetail extends Component {
 
         return (
             <ScrollView>
-                <Animatable.View animation="fadeInUp" duration={2000} delay={1000}>
-                    <RenderDish
-                        dish={dish}
-                        favorite={isFavorite}
-                        onPressFavorite={() => this.markFavorite(dishId)}
-                        onPressEdit={() => this.toggleCommentModal()}
-                    />
-                    <RenderComments comments={comments}/>
-                </Animatable.View>
+                <RenderDish
+                    dish={dish}
+                    favorite={isFavorite}
+                    onPressFavorite={() => this.markFavorite(dishId)}
+                    onPressEdit={() => this.toggleCommentModal()}
+                />
+                <RenderComments comments={comments}/>
                 <Modal
                     animationType='slide'
                     transparent={false}
