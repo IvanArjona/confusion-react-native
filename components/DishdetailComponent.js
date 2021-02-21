@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, FlatList, Modal, StyleSheet, Button, Alert, PanResponder } from 'react-native';
+import { View, Text, ScrollView, FlatList, Modal, StyleSheet, Button, Alert, PanResponder, Share } from 'react-native';
 import { Card, Icon, Input, AirbnbRating } from 'react-native-elements';
 import { connect } from 'react-redux';
 import * as Animatable from 'react-native-animatable';
@@ -67,6 +67,16 @@ function RenderDish({ dish, favorite, onPressFavorite, onPressEdit }) {
         }
     });
 
+    const shareDish = (title, message, url) => {
+        Share.share({
+            title,
+            message: `${title}: ${message} ${url}`,
+            url
+        }, {
+            dialogTitle: `Share ${title}`
+        });
+    };
+
     if (dish) {
         return (
             <Animatable.View animation="fadeInUp" duration={2000} delay={1000}
@@ -96,6 +106,14 @@ function RenderDish({ dish, favorite, onPressFavorite, onPressEdit }) {
                             type='font-awesome'
                             color='#512DA8'
                             onPress={() => onPressEdit()}
+                        />
+                        <Icon
+                            raised
+                            reverse
+                            name='share'
+                            type='font-awesome'
+                            color='#51D2A8'
+                            onPress={() => shareDish(dish.name, dish.description, baseUrl + dish.image)}
                         />
                     </View>
                 </Card>
