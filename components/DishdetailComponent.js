@@ -27,6 +27,10 @@ function RenderDish({ dish, favorite, onPressFavorite, onPressEdit }) {
         return dx < -200;
     };
 
+    const recognizeComment = ({ moveX, moveY, dx, dy }) => {
+        return dx > 200;
+    };
+
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (e, gestureState) => {
             return true;
@@ -36,6 +40,7 @@ function RenderDish({ dish, favorite, onPressFavorite, onPressEdit }) {
                 .then((endState) => console.log(endState.finished ? 'finished' : 'cancelled'));
         },
         onPanResponderEnd: (e, gestureState) => {
+            // Right to left
             if (recognizeDrag(gestureState)) {
                 Alert.alert(
                     'Add to favorites?',
@@ -53,6 +58,10 @@ function RenderDish({ dish, favorite, onPressFavorite, onPressEdit }) {
                     ],
                     { cancelable: false }
                 );
+            }
+            // Left to right
+            else if (recognizeComment(gestureState)) {
+                onPressEdit();
             }
             return true;
         }
