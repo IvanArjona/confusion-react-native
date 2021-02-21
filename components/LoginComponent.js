@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, ScrollView, Image } from 'react-native';
+import { View, StyleSheet, ScrollView, Image } from 'react-native';
 import { Input, CheckBox, Button, Icon } from 'react-native-elements';
 import * as SecureStore from 'expo-secure-store';
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
-import { Asset } from 'expo-asset';
 import { createBottomTabNavigator } from 'react-navigation';
 import { baseUrl } from '../shared/baseUrl';
 
@@ -145,6 +144,22 @@ class RegisterTab extends Component {
         }
     }
 
+    getImageFromGallery = async () => {
+        const mediaLibraryPermission = await ImagePicker.getMediaLibraryPermissionsAsync();
+
+        if (mediaLibraryPermission.status === 'granted') {
+            const image = ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [4, 3]
+            });
+
+            if (!image.cancelled) {
+                this.processImage(image.uri);
+            }
+
+        }
+    }
+
     processImage = async (imageUri) => {
         const actions = [
             {
@@ -191,6 +206,10 @@ class RegisterTab extends Component {
                         <Button
                             title='Camera'
                             onPress={this.getImageFromCamera}
+                        />
+                        <Button
+                            title='Gallery'
+                            onPress={this.getImageFromGallery}
                         />
                     </View>
                     <Input
@@ -275,7 +294,8 @@ const styles = StyleSheet.create({
     imageContainer: {
         flex: 1,
         flexDirection: 'row',
-        margin: 20
+        margin: 20,
+        justifyContent: 'space-around'
     },
     image: {
         margin: 10,
